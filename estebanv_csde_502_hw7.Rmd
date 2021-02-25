@@ -57,8 +57,40 @@ if(!require (Rmisc)) install.packages("Rmisc")
 cap.tab = captioner(prefix = "Table")
 cap.fig = captioner(prefix = "Figure")
 
-#Step 0.0.6: Setting file directory
-f.dir = paste0(getwd(), "/")
+#Step 0.0.6: Setting temporary file directory and temporary file
+f.dir = paste0(tempdir(), "/")
+f.temp = tempfile()
+
+#Step 0.0.7: Downloading/opening Add Health zip-file.
+
+  ##Naming html address
+  f.url = "http://staff.washington.edu/phurvitz/csde502_winter_2021/data/21600-0001-Data.dta.zip"
+  
+  ##Setting path for zipfile
+  z.file = file.path(Sys.getenv("TEMP"), basename(f.url))
+  
+  ##Setting file in temporary folder
+  f.data = tools::file_path_sans_ext(z.file)
+  
+  ##Check-loop: Does file exist?
+  if(!file.exists(f.data)){
+    
+    ###If the file does not exist...
+    if(!file.exists(z.file)){
+      curl::curl_download(url = f.url, destfile = z.file)
+    }
+    
+    ###If the file does exist...
+    unzip(ziipfile = z.file, exdir = Sys.getenv("TEMP"))
+  }
+  
+  ##Check-loop: Has file been read? If not, reading in file...
+  if(!exists("adh.data")) {
+    adh.data = haven::read_dta(f.data)
+  }
+  
+  ##Changing column names to lower case
+  colnames(adh.data) %<>% str_to_lower()
 ```
 
-End
+End.
