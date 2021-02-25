@@ -131,7 +131,7 @@ DT::datatable(m.data)
 
 Below presents a frequency tabulation of the variable `$suspensions`.
 
-```{r}
+```{r, results = "markdown"}
 #Step 2.0.1: Tabulation
 tab.x = table(s.adh$suspensions)
 tab.y = round(prop.table(tab.x) * 100, digits = 1)
@@ -142,7 +142,7 @@ kable(tab.z) %>%
 
 Below is a frequency tabulation of the variable `$gr_english`.
 
-```{r}
+```{r, results = "markdown"}
 #Step 2.0.2: Tabulation
 tab.x = table(s.adh$gr_english)
 tab.y = round(prop.table(tab.x) * 100, digits = 1)
@@ -153,7 +153,7 @@ kable(tab.z) %>%
 
 Below is a frequency tabulation of the variable `$gr_maths`.
 
-```{r}
+```{r, results = "markdown"}
 #Step 2.0.3: Tabulation
 tab.x = table(s.adh$gr_maths)
 tab.y = round(prop.table(tab.x) * 100, digits = 1)
@@ -164,7 +164,7 @@ kable(tab.z) %>%
 
 Below is a frequency tabulation of the variable `$gr_history`.
 
-```{r}
+```{r, results = "markdown"}
 #Step 2.0.4: Tabulation
 tab.x = table(s.adh$gr_history)
 tab.y = round(prop.table(tab.x) * 100, digits = 1)
@@ -175,7 +175,7 @@ kable(tab.z) %>%
 
 Below is a frequency tabulation of the variable `$gr_science`.
 
-```{r}
+```{r, results = "markdown"}
 #Step 2.0.5: Tabulation
 tab.x = table(s.adh$gr_science)
 tab.y = round(prop.table(tab.x) * 100, digits = 1)
@@ -186,7 +186,7 @@ kable(tab.z) %>%
 
 Below is a frequency cross-tabulation of the variables `$suspensions` & `$gr_english`.
 
-```{r}
+```{r, results = "markdown"}
 #Step 2.0.6: Tabulation
 
   ##Tabulation for No Suspensions
@@ -207,4 +207,40 @@ Below is a frequency cross-tabulation of the variables `$suspensions` & `$gr_eng
   ##Printing table
   kable(tab.fin) %>%
   kable_styling(full_width = FALSE,  position = "left")
+```
+
+# Plot
+
+The below barplot graphs the distribution of `$suspesions`
+
+```{r, results = "markdown"}
+#Step 3.0.1: Recoding suspension variable
+attributes(s.adh$suspensions)$levels = c("(0) Never Suspended",
+                                         "(1) Prior Suspension",
+                                         "(6) Refused to Answer",
+                                         "(8) Don't Know Answer")
+
+#Step 3.0.2: Plotting distribution
+ggplot(data = s.adh, mapping = aes(x = suspensions)) +
+  geom_bar(aes(y = (..prop..) * 100, group = 1)) +
+  ylab("Response Proportion (%) \n") +
+  xlab("\nHistory of Suspension, Survey Response \n") +
+  labs(title = "Figure 1. Distribution of Responses to Suspension Question, Add Health Data")
+```
+
+# Saving data
+
+The data are saved as an `RDS` object in a temporary directory.
+
+```{r}
+#Step 4.0.1: Saving data
+saveRDS(s.adh, paste0(f.dir, "adh_data.rds"))
+```
+
+# Source code
+
+The source code for this document is indicated below
+
+```{r, results = "markdown"}
+cat(readLines(con = "estebanv_csde_502_hw7.Rmd"), sep = '\n')
 ```
