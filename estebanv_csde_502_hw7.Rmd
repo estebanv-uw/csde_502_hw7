@@ -93,4 +93,118 @@ f.temp = tempfile()
   colnames(adh.data) %<>% str_to_lower()
 ```
 
-End.
+# Introduction
+The following file describes the subsetting and tabulation of data from Add Health. The full Add Health wave 1 data have been downloaded, and consist of `r length(adh.data)` variables. We will parse this down to just 5 variables.
+
+```{r}
+#Step 1.0.1: Subsetting data
+s.adh = subset(adh.data, 
+               select = c(h1ed7, h1ed11, h1ed12, h1ed13, h1ed14))
+
+#Step 1.0.2: Renaming data
+s.adh %<>% dplyr::rename(suspensions = h1ed7, 
+                         gr_english = h1ed11, 
+                         gr_maths = h1ed12, 
+                         gr_history = h1ed13, 
+                         gr_science = h1ed14)
+
+#Step 1.0.3: Rendering variables as factors
+s.adh %<>% lapply(FUN = function(x) factor(x, 
+                                           ordered = is.ordered(x),
+                                           labels = attributes(unlist(attributes(x)$labels))$names))
+s.adh = data.frame(s.adh)
+```
+
+Once the data frame is subset, we can examine the variables we have selected by variable name and variable label. 
+
+```{r}
+#Step 1.0.4: Specifying metadata
+m.data = bind_cols(varname = colnames(s.adh),
+                   varlabel = s.adh %>% map(~attributes(.)$label) %>% unlist())
+
+#Step 1.0.5: Printing variable table
+DT::datatable(m.data)
+
+```
+
+# Tables
+
+Below presents a frequency tabulation of the variable `$suspensions`.
+
+```{r}
+#Step 2.0.1: Tabulation
+tab.x = table(s.adh$suspensions)
+tab.y = round(prop.table(tab.x) * 100, digits = 1)
+tab.z = cbind(N = tab.x, Percent = tab.y)
+kable(tab.z) %>%
+  kable_styling(full_width = FALSE,  position = "left")
+```
+
+Below is a frequency tabulation of the variable `$gr_english`.
+
+```{r}
+#Step 2.0.2: Tabulation
+tab.x = table(s.adh$gr_english)
+tab.y = round(prop.table(tab.x) * 100, digits = 1)
+tab.z = cbind(N = tab.x, Percent = tab.y)
+kable(tab.z) %>%
+  kable_styling(full_width = FALSE,  position = "left")
+```
+
+Below is a frequency tabulation of the variable `$gr_maths`.
+
+```{r}
+#Step 2.0.3: Tabulation
+tab.x = table(s.adh$gr_maths)
+tab.y = round(prop.table(tab.x) * 100, digits = 1)
+tab.z = cbind(N = tab.x, Percent = tab.y)
+kable(tab.z) %>%
+  kable_styling(full_width = FALSE,  position = "left")
+```
+
+Below is a frequency tabulation of the variable `$gr_history`.
+
+```{r}
+#Step 2.0.4: Tabulation
+tab.x = table(s.adh$gr_history)
+tab.y = round(prop.table(tab.x) * 100, digits = 1)
+tab.z = cbind(N = tab.x, Percent = tab.y)
+kable(tab.z) %>%
+  kable_styling(full_width = FALSE,  position = "left")
+```
+
+Below is a frequency tabulation of the variable `$gr_science`.
+
+```{r}
+#Step 2.0.5: Tabulation
+tab.x = table(s.adh$gr_science)
+tab.y = round(prop.table(tab.x) * 100, digits = 1)
+tab.z = cbind(N = tab.x, Percent = tab.y)
+kable(tab.z) %>%
+  kable_styling(full_width = FALSE,  position = "left")
+```
+
+Below is a frequency cross-tabulation of the variables `$suspensions` & `$gr_english`.
+
+```{r}
+#Step 2.0.6: Tabulation
+
+  ##Tabulation for No Suspensions
+  tab.x1 = table(s.adh$gr_english[s.adh$suspensions == "(0) No (skip to Q.9)"])
+  tab.y1 = round(prop.table(tab.x1) * 100, digits = 1)
+  tab.z1 = cbind(N = tab.x1, Percent = tab.y1)
+  rownames(tab.z1) = paste0(rownames(tab.z1), ":  Never Suspended")
+  
+  ##Tabulation for Yes Suspensions
+  tab.x2 = table(s.adh$gr_english[s.adh$suspensions == "(1) Yes"])
+  tab.y2 = round(prop.table(tab.x2) * 100, digits = 1)
+  tab.z2 = cbind(N = tab.x2, Percent = tab.y2)
+  rownames(tab.z2) = paste0(rownames(tab.z2), ":  Previously Suspended")
+  
+  ##Adding tabulations together
+  tab.fin = rbind(tab.z1, tab.z2)
+  
+  ##Printing table
+  kable(tab.fin) %>%
+  kable_styling(full_width = FALSE,  position = "left")
+```
