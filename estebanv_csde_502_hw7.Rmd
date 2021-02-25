@@ -1,0 +1,64 @@
+---
+title: "CSDE 502: Homework #7"
+author: "[Esteban J. Valencia](mailto:estebanv@uw.edu)"
+date: '`r format(Sys.time(), "%Y-%m-%d %H:%M")`'
+header-includes:
+- \usepackage{float} 
+- \floatplacement{figure}{H}
+output: 
+    bookdown::html_document2:
+        theme: journal
+        number_sections: true
+        self_contained: true
+        code_folding: hide
+        toc: true
+        toc_float:
+            collapsed: true
+            smooth_scroll: false
+urlcolor: blue        
+---
+```{css, echo=FALSE}
+#Step 0.0.1: Setting wide-wise scrolling
+pre, code {white-space: pre !important; overflow-x: auto}
+
+```
+```{r setup, warning = FALSE, message = FALSE, results = "hide"}
+#Step 0.0.2: Specifying chunk options
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      results = "hide",
+                      width = 1000)
+
+#Step 0.0.3: Setting CRAN mirror
+options(repos = "https://mirror.las.iastate.edu/CRAN/",
+        width = 1000)
+
+#Step 0.0.4: Installing & Reading packages
+if(!require (knitr)) install.packages("knitr")
+library(knitr)
+if(!require (bookdown)) install.packages("bookdown")
+library(bookdown)
+if(!require (tidyverse)) install.packages("tidyverse")
+library(tidyverse)
+if(!require (magisttr)) install.packages("magrittr")
+(library(magrittr))
+if(!require (kableExtra)) install.packages("kableExtra")
+library(kableExtra)
+if(!require (ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+if(!require (readstata13)) install.packages("readstata13")
+library(readstata13)
+if(!require (captioner)) install.packages("captioner")
+library(captioner)
+if(!require (Rmisc)) install.packages("Rmisc")
+
+#Step 0.0.5: Setting captions
+cap.tab = captioner(prefix = "Table")
+cap.fig = captioner(prefix = "Figure")
+
+#Step 0.0.6: Setting file directory
+f.dir = paste0(getwd(), "/")
+```
+
+End
